@@ -9,7 +9,7 @@ import { useSignTypedData } from "../utils/sign";
 export const useMirror = (
   profileId: string | undefined,
   publicationId: string | undefined,
-  onFunctions: OnFunctions,
+  onFunctions?: OnFunctions,
 ): { mirror: () => void; loading: boolean; error: Error | null } => {
   const dispatch = useProfileHasDispatcher(profileId);
   const [createMirrorTypedData, { data: mirrorTypedData }] = useCreateMirrorTypedData(profileId, publicationId);

@@ -7,7 +7,7 @@ import { useSignTypedData } from "../utils/sign";
 
 export const useCollect = (
   publicationId: string | undefined,
-  onFunctions: OnFunctions,
+  onFunctions?: OnFunctions,
 ): { collect: () => void; loading: boolean; error: Error | null } => {
   const [createCollectTypedData, { data: collectTypedData }] = useCreateCollectTypedData(publicationId);
 

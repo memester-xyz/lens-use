@@ -7,7 +7,7 @@ import { useSignTypedData } from "../utils/sign";
 
 export const useFollow = (
   profileId: string,
-  onFunctions: OnFunctions,
+  onFunctions?: OnFunctions,
 ): { follow: () => void; loading: boolean; error: Error | null } => {
   const [createFollowTypedData, { data: followTypedData }] = useCreateFollowTypedData(profileId);
 

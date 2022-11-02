@@ -10,7 +10,7 @@ export const useComment = (
   publicationId: string | undefined,
   profileId: string | undefined,
   commentURL: string | undefined,
-  onFunctions: OnFunctions,
+  onFunctions?: OnFunctions,
 ): { comment: () => void; loading: boolean; error: Error | null } => {
   const dispatch = useProfileHasDispatcher(profileId);
 

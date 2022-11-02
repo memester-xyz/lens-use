@@ -7,6 +7,7 @@ import {
   useProfiles,
 } from "./hooks/api/profile";
 import { usePublication, usePublicationComments, usePublications } from "./hooks/api/publication";
+import { useSearch } from "./hooks/api/search";
 import { useCollect } from "./hooks/combined/collect";
 import { useComment } from "./hooks/combined/comment";
 import { useFollow, useUnfollow } from "./hooks/combined/follow";
@@ -21,18 +22,14 @@ import { useContractProfile } from "./hooks/contract/profile";
 
 export {
   useAuthenticate,
-  // Login
   useChallenge,
-  // API Writes
   useCollect,
   useComment,
-  // Contract Writes
   useContractCollect,
   useContractComment,
   useContractFollow,
   useContractMirror,
   useContractPost,
-  // Contract Reads
   useContractProfile,
   useContractUnfollow,
   useDefaultProfile,
@@ -42,11 +39,11 @@ export {
   useProfile,
   useProfileHasDispatcher,
   useProfilePicture,
-  // API Reads
   useProfiles,
   usePublication,
   usePublicationComments,
   usePublications,
   useRefresh,
+  useSearch,
   useUnfollow,
 };

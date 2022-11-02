@@ -67,6 +67,20 @@ import { useProfile } from "@memester-xyz/lens-use";
 const { data } = useProfile("stani.lens");
 ```
 
+3. The return value of any API hook (e.g. `useProfile`, `useChallenge`) is a typed Apollo GraphQL return value. i.e.
+
+   - [`QueryResult`](https://www.apollographql.com/docs/react/api/react/hooks/#result) for queries
+   - [`MutationTuple`](https://www.apollographql.com/docs/react/api/react/hooks/#mutationtupletdata-tvariables-result-tuple) for mutations.
+
+4. The return value of any contract hook (e.g. `useContractCollect`) is a modification of a normal Wagmi [`useContractWrite`](https://wagmi.sh/docs/hooks/useContractWrite#return-value).
+
+5. The return value of any action hook (e.g. `useCollect`) is an object containing:
+   - a write method with the same name as the hook action (e.g. `collect()`)
+   - a loading boolean when the request is in flight `loading`
+   - an Error object or undefined `error`
+
+Full API specification is below in the [hooks](#hooks) section.
+
 ### Advanced
 
 By default we use the currently known Polygon Mainnet Lens Hub Proxy address. There are two ways to override this but both require adding our `LensProvider` context to your app.
@@ -101,6 +115,97 @@ function App() {
     </WagmiConfig>
   );
 }
+```
+
+## Hooks
+
+- [Login](#login)
+  - [useChallenge](#useChallenge)
+  - [useAuthenticate](#useAuthenticate)
+  - [useRefresh](#useRefresh)
+- [Query](#query)
+  - [useProfile](#useProfile)
+- [Write](#write)
+  - [useCollect](#useCollect)
+- [Contract](#contract)
+  - [useContractCollect](#useContractCollect)
+
+### Login
+
+Hooks to help with authenticating against the Lens API.
+
+#### useChallenge - Get a challenge to be signed by the user
+
+[Lens Reference](https://docs.lens.xyz/docs/login#challenge)
+
+```typescript
+const { data: challengeData } = useChallenge(address);
+
+// challengeData.challenge.text must be signed by the user's wallet
+```
+
+#### useAuthenticate - Authenticate the signed challenge
+
+[Lens Reference](https://docs.lens.xyz/docs/login#authenticate)
+
+```typescript
+const [authenticate, { data: authenticateData }] = useAuthenticate(address, signedChallenge);
+
+authenticate();
+
+// authenticateData.authenticate.accessToken has acccess token
+// authenticateData.authenticate.refreshToken has refresh token
+```
+
+#### useRefresh - Refresh the JWT
+
+[Lens Reference](https://docs.lens.xyz/docs/refresh-jwt)
+
+```typescript
+const [refresh, { data: refreshData }] = useRefresh(refreshToken);
+
+refresh();
+
+// refreshData.refresh.accessToken has acccess token
+// refreshData.refresh.refreshToken has refresh token
+```
+
+### Query
+
+Hooks to query the Lens API. Note, some of these require authentication, check the Lens Reference.
+
+#### useProfile - Get a profile by handle
+
+[Lens Reference](https://docs.lens.xyz/docs/get-profile#get-by-handle)
+
+```typescript
+const { data } = useProfile(handle);
+```
+
+### Write
+
+Hooks to write to Lens using the [dispatcher](https://docs.lens.xyz/docs/dispatcher) if enabled or the [broadcaster](https://docs.lens.xyz/docs/broadcast-transaction) if not. Note, your Apollo GraphQL client must be authenticated! [Example here](https://github.com/lens-protocol/api-examples/blob/master/src/apollo-client.ts#L40).
+
+#### useCollect - Collect a publication using the API - ⚠️ Authenticated API
+
+```typescript
+const { collect, loading, error } = useCollect(publicationId);
+
+collect();
+```
+
+### Contract
+
+#### useCollectContract - Collect a publication using the Lens Hub Contract
+
+```typescript
+const { write, data, prepareError, writeError, status } = useContractCollect(
+  profileId,
+  publicationId,
+  collectModuleBytes,
+);
+
+write();
 ```
 
 ---

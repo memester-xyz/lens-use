@@ -10,7 +10,7 @@ import { useSignTypedData } from "../utils/sign";
 export const usePost = (
   profileId: string | undefined,
   postURL: string | undefined,
-  { onBroadcasted, onCompleted }: OnFunctions,
+  { onBroadcasted, onCompleted }: OnFunctions = { onBroadcasted: undefined, onCompleted: undefined },
 ): {
   post: () => void;
   loading: boolean;

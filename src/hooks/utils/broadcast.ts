@@ -9,7 +9,7 @@ export const useBroadcastAPIHook = (
   id: string | undefined,
   dispatchBroadcast: SuccessfulBroadcast | FailedBroadcast | undefined,
   { signTypedData, error: signError, data, status }: SignReturn,
-  { onCompleted, onBroadcasted }: OnFunctions,
+  { onBroadcasted, onCompleted }: OnFunctions = { onBroadcasted: undefined, onCompleted: undefined },
 ): { start: () => void; loading: boolean; error: Error | null } => {
   const [loading, setLoading] = useState(false);
   const [writing, setWriting] = useState(false);
