@@ -134,6 +134,7 @@ function App() {
   - [usePublication](#usePublication)
   - [usePublications](#usePublications)
   - [usePublicationComments](#usePublicationComments)
+  - [useSearch](#useSearch)
 - [Write](#write)
   - [useCollect](#useCollect)
   - [useComment](#useComment)
@@ -290,6 +291,16 @@ Retrieve publications based on various parameters
 ```typescript
 // Get comments for a specific publication
 const { data } = usePublicationComments(publicationId);
+```
+
+### useSearch
+
+_[Lens Reference](https://docs.lens.xyz/docs/search-profiles-and-publications#search-across-profiles)_
+
+Search profiles
+
+```typescript
+const { data } = useSearch("stani");
 ```
 
 ## Write
