@@ -305,7 +305,7 @@ const { data } = useSearch("stani");
 
 ## Write
 
-Hooks to write to Lens using the [dispatcher](https://docs.lens.xyz/docs/dispatcher) if enabled or the [broadcaster](https://docs.lens.xyz/docs/broadcast-transaction) if not. Note, your Apollo GraphQL client must be [authenticated](https://github.com/lens-protocol/api-examples/blob/master/src/apollo-client.ts#L40)!
+Hooks to write to Lens using the [dispatcher](https://docs.lens.xyz/docs/dispatcher) if enabled or the [broadcaster](https://docs.lens.xyz/docs/broadcast-transaction) if not. Note, your Apollo GraphQL client must be [authenticated](https://docs.lens.xyz/docs/authentication-quickstart)!
 
 All write hooks take an optional final parameter which allows you to specify callback functions. An example is given for `useCollect` but the same applies to all hooks in this section.
 
