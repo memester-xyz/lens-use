@@ -12,6 +12,8 @@
 - [wagmi](https://wagmi.sh/)
 - [ethers](https://docs.ethers.io/v5/)
 
+**Jump straight to the [Hooks Reference](#hooks-reference)**
+
 # Example
 
 ```typescript
@@ -117,7 +119,7 @@ function App() {
 }
 ```
 
-# Hooks
+# Hooks Reference
 
 - [Login](#login)
   - [useChallenge](#useChallenge)
