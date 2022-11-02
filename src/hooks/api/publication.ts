@@ -678,8 +678,7 @@ const GET_PUBLICATIONS = gql`
 
 export const usePublications = (
   profileId?: string,
-  publicationTypes?: PublicationType[],
-  metadata?: GetPublicationsRequest["request"]["metadata"],
+  publicationTypes: PublicationType[] = [PublicationType.POST],
   sources?: [string],
 ): QueryResult<GetPublicationsResponse, GetPublicationsRequest> => {
   return useQuery<GetPublicationsResponse, GetPublicationsRequest>(GET_PUBLICATIONS, {
@@ -687,7 +686,6 @@ export const usePublications = (
       request: {
         profileId,
         publicationTypes,
-        metadata,
         sources,
       },
     },

@@ -72,7 +72,7 @@ const { data } = useProfile("stani.lens");
    - [`QueryResult`](https://www.apollographql.com/docs/react/api/react/hooks/#result) for queries
    - [`MutationTuple`](https://www.apollographql.com/docs/react/api/react/hooks/#mutationtupletdata-tvariables-result-tuple) for mutations.
 
-4. The return value of any contract hook (e.g. `useContractCollect`) is a modification of a normal Wagmi [`useContractWrite`](https://wagmi.sh/docs/hooks/useContractWrite#return-value).
+4. The return value of any contract hook (e.g. `useContractProfile`, `useContractCollect`) is a modification of a normal Wagmi [`useContractRead`](https://wagmi.sh/docs/hooks/useContractRead#return-value) or [`useContractWrite`](https://wagmi.sh/docs/hooks/useContractWrite#return-value).
 
 5. The return value of any action hook (e.g. `useCollect`) is an object containing:
    - a write method with the same name as the hook action (e.g. `collect()`)
@@ -125,10 +125,28 @@ function App() {
   - [useRefresh](#useRefresh)
 - [Query](#query)
   - [useProfile](#useProfile)
+  - [useProfiles](#useProfiles)
+  - [useDefaultProfile](#useDefaultProfile)
+  - [useProfilePicture](#useProfilePicture)
+  - [useProfileHasDispatcher](#useProfileHasDispatcher)
+  - [usePublication](#usePublication)
+  - [usePublications](#usePublications)
+  - [usePublicationComments](#usePublicationComments)
 - [Write](#write)
   - [useCollect](#useCollect)
+  - [useComment](#useComment)
+  - [useFollow](#useFollow)
+  - [useUnfollow](#useUnfollow)
+  - [useMirror](#useMirror)
+  - [usePost](#usePost)
 - [Contract](#contract)
   - [useContractCollect](#useContractCollect)
+  - [useContractComment](#useContractComment)
+  - [useContractFollow](#useContractFollow)
+  - [useContractUnfollow](#useContractUnfollow)
+  - [useContractMirror](#useContractMirror)
+  - [useContractPost](#useContractPost)
+  - [useContractProfile](#useContractProfile)
 
 ## Login
 
@@ -155,8 +173,10 @@ Authenticate the signed challenge
 ```typescript
 const [authenticate, { data: authenticateData }] = useAuthenticate(address, signedChallenge);
 
+// Call this method to start the authentication request
 authenticate();
 
+// After the request is complete
 // authenticateData.authenticate.accessToken has acccess token
 // authenticateData.authenticate.refreshToken has refresh token
 ```
@@ -170,8 +190,10 @@ Refresh the JWT
 ```typescript
 const [refresh, { data: refreshData }] = useRefresh(refreshToken);
 
+// Call this method to start the refresh request
 refresh();
 
+// After the request is complete
 // refreshData.refresh.accessToken has acccess token
 // refreshData.refresh.refreshToken has refresh token
 ```
@@ -190,9 +212,89 @@ Get a profile by handle
 const { data } = useProfile(handle);
 ```
 
+### useProfiles
+
+_[Lens Reference](https://docs.lens.xyz/docs/get-profiles#get-by-owned-by)_
+
+Get all profiles owned by an address
+
+```typescript
+const { data } = useProfiles(address);
+```
+
+### useDefaultProfile
+
+_[Lens Reference](https://docs.lens.xyz/docs/get-default-profile)_
+
+Get default profile by address
+
+```typescript
+const defaultProfile = useDefaultProfile(address);
+```
+
+### useProfilePicture
+
+The response body from `useProfile` and `useDefaultProfile` is slightly different, so this method helps to pull out the profile picture from one of those.
+
+```typescript
+const defaultProfile = useDefaultProfile(address);
+const pfpURL = useProfilePicture(defaultProfile);
+```
+
+### useProfileHasDispatcher
+
+A simple utility which returns `true` if the profile has the dispatcher enabled.
+
+```typescript
+const dispatch = useProfileHasDispatcher(profileId);
+```
+
+### usePublication
+
+_[Lens Reference](https://docs.lens.xyz/docs/get-publication)_
+
+Retrieve details for a specific publication
+
+```typescript
+const { data } = usePublication(publicationId);
+
+// Pass in profileId to get the mirrored status in your publication results
+const { data } = usePublication(publicationId, profileId);
+```
+
+### usePublications
+
+_[Lens Reference](https://docs.lens.xyz/docs/get-publications)_
+
+Retrieve publications based on various parameters
+
+```typescript
+// Get posts from a specific profile
+const { data } = usePublications(profileId);
+
+// Get posts and comments from a specific profile
+const { data } = usePublications(profileId, [PublicationType.POST, PublicationType.COMMENT]);
+
+// Get posts from a specific profile and source
+const { data } = usePublications(profileId, [PublicationType.POST], ["memester"]);
+```
+
+### usePublicationComments
+
+_[Lens Reference](https://docs.lens.xyz/docs/get-publications)_
+
+Retrieve publications based on various parameters
+
+```typescript
+// Get comments for a specific publication
+const { data } = usePublicationComments(publicationId);
+```
+
 ## Write
 
-Hooks to write to Lens using the [dispatcher](https://docs.lens.xyz/docs/dispatcher) if enabled or the [broadcaster](https://docs.lens.xyz/docs/broadcast-transaction) if not. Note, your Apollo GraphQL client must be authenticated! [Example here](https://github.com/lens-protocol/api-examples/blob/master/src/apollo-client.ts#L40).
+Hooks to write to Lens using the [dispatcher](https://docs.lens.xyz/docs/dispatcher) if enabled or the [broadcaster](https://docs.lens.xyz/docs/broadcast-transaction) if not. Note, your Apollo GraphQL client must be [authenticated](https://github.com/lens-protocol/api-examples/blob/master/src/apollo-client.ts#L40)!
+
+All write hooks take an optional final parameter which allows you to specify callback functions. An example is given for `useCollect` but the same applies to all hooks in this section.
 
 ### useCollect
 
@@ -201,7 +303,73 @@ Collect a publication using the API
 ```typescript
 const { collect, loading, error } = useCollect(publicationId);
 
+// Call this method to start the collect request
 collect();
+
+// You can also pass in callback functions
+const { collect, loading, error } = useCollect(publicationId, {
+  onBroadcasted(receipt) {
+    // ...
+  },
+  onCompleted(receipt) {
+    // receipt will be undefined if the request errored for some reason
+  },
+});
+```
+
+### useComment
+
+Comment on a publication. Requires a URL with the comment metadata already uploaded
+
+```typescript
+const { collect, loading, error } = useComment(profileId, publicationId, commentURL);
+
+// Call this method to start the comment request
+comment();
+```
+
+### useFollow
+
+Follow a profile
+
+```typescript
+const { follow, loading, error } = useFollow(profileIdToFollow);
+
+// Call this method to start the follow request
+follow();
+```
+
+### useUnfollow
+
+Unfollow a profile
+
+```typescript
+const { unfollow, loading, error } = useUnfollow(profileIdToUnfollow);
+
+// Call this method to start the unfollow request
+unfollow();
+```
+
+### useMirror
+
+Mirror a publication
+
+```typescript
+const { mirror, loading, error } = useMirror(profileId, publicationId);
+
+// Call this method to start the mirror request
+mirror();
+```
+
+### usePost
+
+Post. Requires a URL with the post metadata already uploaded
+
+```typescript
+const { post, loading, error } = usePost(profileId, postURL);
+
+// Call this method to start the post request
+post();
 ```
 
 ## Contract
@@ -213,13 +381,109 @@ _[Lens Reference](https://docs.lens.xyz/docs/functions#collect)_
 Collect a publication using the Lens Hub Contract
 
 ```typescript
+const { write, data, prepareError, writeError, status } = useContractCollect(profileId, publicationId);
+
+// Call this method to invoke the users connected wallet
+write();
+```
+
+### useContractComment
+
+_[Lens Reference](https://docs.lens.xyz/docs/functions#comment)_
+
+Comment on a publication using the Lens Hub Contract
+
+```typescript
 const { write, data, prepareError, writeError, status } = useContractCollect(
   profileId,
-  publicationId,
-  collectModuleBytes,
+  contentURI,
+  profileIdPointed,
+  pubIdPointed,
+  collectModule,
+  collectModuleInitData,
+  referenceModule,
+  referenceModuleInitData,
+  referenceModuleData,
 );
 
+// Call this method to invoke the users connected wallet
 write();
+```
+
+### useContractFollow
+
+_[Lens Reference](https://docs.lens.xyz/docs/functions#follow)_
+
+Follow profiles using the Lens Hub Contract
+
+```typescript
+const { write, data, prepareError, writeError, status } = useContractFollow(profileIds);
+
+// Call this method to invoke the users connected wallet
+write();
+```
+
+### useContractUnfollow
+
+_[Lens Reference](https://docs.lens.xyz/docs/follow)_
+
+Unfollow a profile by burning the specific Follow NFT. You must pass in the relevant follow NFT address and tokenId
+
+```typescript
+const { write, data, prepareError, writeError, status } = useContractUnfollow(followNFTAddress, tokenId);
+
+// Call this method to invoke the users connected wallet
+write();
+```
+
+### useContractMirror
+
+_[Lens Reference](https://docs.lens.xyz/docs/functions#mirror)_
+
+Mirror a publication using the Lens Hub Contract
+
+```typescript
+const { write, data, prepareError, writeError, status } = useContractMirror(
+  profileId,
+  profileIdPointed,
+  pubIdPointed,
+  referenceModuleData,
+  referenceModule,
+  referenceModuleInitData,
+);
+
+// Call this method to invoke the users connected wallet
+write();
+```
+
+### useContractPost
+
+_[Lens Reference](https://docs.lens.xyz/docs/functions#post)_
+
+Post using the Lens Hub Contract
+
+```typescript
+const { write, data, prepareError, writeError, status } = useContractPost(
+  profileId?,
+  contentURI,
+  collectModule,
+  collectModuleInitData,
+  referenceModule,
+  referenceModuleInitData,
+);
+
+// Call this method to invoke the users connected wallet
+write();
+```
+
+### useContractProfile
+
+_[Lens Reference](https://docs.lens.xyz/docs/view-functions#getprofile)_
+
+Read profile from the Lens Hub Contract
+
+```typescript
+const { data } = useContractProfile(profileId);
 ```
 
 ---

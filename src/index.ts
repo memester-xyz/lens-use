@@ -19,8 +19,10 @@ import { useContractFollow, useContractUnfollow } from "./hooks/contract/follow"
 import { useContractMirror } from "./hooks/contract/mirror";
 import { useContractPost } from "./hooks/contract/post";
 import { useContractProfile } from "./hooks/contract/profile";
+import { PublicationType } from "./types/lens";
 
 export {
+  PublicationType,
   useAuthenticate,
   useChallenge,
   useCollect,

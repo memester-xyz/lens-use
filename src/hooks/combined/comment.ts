@@ -7,8 +7,8 @@ import { useBroadcastAPIHook } from "../utils/broadcast";
 import { useSignTypedData } from "../utils/sign";
 
 export const useComment = (
-  publicationId: string | undefined,
   profileId: string | undefined,
+  publicationId: string | undefined,
   commentURL: string | undefined,
   onFunctions?: OnFunctions,
 ): { comment: () => void; loading: boolean; error: Error | null } => {
