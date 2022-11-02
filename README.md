@@ -12,7 +12,7 @@
 - [wagmi](https://wagmi.sh/)
 - [ethers](https://docs.ethers.io/v5/)
 
-## Example
+# Example
 
 ```typescript
 const { data: profileResponse } = useProfile("stani.lens");
@@ -26,7 +26,7 @@ const onClick = () => {
 };
 ```
 
-## Installation
+# Installation
 
 ```bash
 # npm
@@ -39,9 +39,9 @@ yarn add @memester-xyz/lens-use
 pnpm add @memester-xyz/lens-use
 ```
 
-## Usage
+# Usage
 
-### Basic
+## Basic
 
 1. Your app must first be wrapped in Wagmi and Apollo contexts. e.g.:
 
@@ -81,7 +81,7 @@ const { data } = useProfile("stani.lens");
 
 Full API specification is below in the [hooks](#hooks) section.
 
-### Advanced
+## Advanced
 
 By default we use the currently known Polygon Mainnet Lens Hub Proxy address. There are two ways to override this but both require adding our `LensProvider` context to your app.
 
@@ -117,7 +117,7 @@ function App() {
 }
 ```
 
-## Hooks
+# Hooks
 
 - [Login](#login)
   - [useChallenge](#useChallenge)
@@ -130,13 +130,15 @@ function App() {
 - [Contract](#contract)
   - [useContractCollect](#useContractCollect)
 
-### Login
+## Login
 
 Hooks to help with authenticating against the Lens API.
 
-#### useChallenge - Get a challenge to be signed by the user
+### useChallenge
 
-[Lens Reference](https://docs.lens.xyz/docs/login#challenge)
+_[Lens Reference](https://docs.lens.xyz/docs/login#challenge)_
+
+Get a challenge to be signed by the user.
 
 ```typescript
 const { data: challengeData } = useChallenge(address);
@@ -144,9 +146,11 @@ const { data: challengeData } = useChallenge(address);
 // challengeData.challenge.text must be signed by the user's wallet
 ```
 
-#### useAuthenticate - Authenticate the signed challenge
+### useAuthenticate
 
-[Lens Reference](https://docs.lens.xyz/docs/login#authenticate)
+_[Lens Reference](https://docs.lens.xyz/docs/login#authenticate)_
+
+Authenticate the signed challenge
 
 ```typescript
 const [authenticate, { data: authenticateData }] = useAuthenticate(address, signedChallenge);
@@ -157,9 +161,11 @@ authenticate();
 // authenticateData.authenticate.refreshToken has refresh token
 ```
 
-#### useRefresh - Refresh the JWT
+### useRefresh
 
-[Lens Reference](https://docs.lens.xyz/docs/refresh-jwt)
+_[Lens Reference](https://docs.lens.xyz/docs/refresh-jwt)_
+
+Refresh the JWT
 
 ```typescript
 const [refresh, { data: refreshData }] = useRefresh(refreshToken);
@@ -170,23 +176,27 @@ refresh();
 // refreshData.refresh.refreshToken has refresh token
 ```
 
-### Query
+## Query
 
 Hooks to query the Lens API. Note, some of these require authentication, check the Lens Reference.
 
-#### useProfile - Get a profile by handle
+### useProfile
 
-[Lens Reference](https://docs.lens.xyz/docs/get-profile#get-by-handle)
+_[Lens Reference](https://docs.lens.xyz/docs/get-profile#get-by-handle)_
+
+Get a profile by handle
 
 ```typescript
 const { data } = useProfile(handle);
 ```
 
-### Write
+## Write
 
 Hooks to write to Lens using the [dispatcher](https://docs.lens.xyz/docs/dispatcher) if enabled or the [broadcaster](https://docs.lens.xyz/docs/broadcast-transaction) if not. Note, your Apollo GraphQL client must be authenticated! [Example here](https://github.com/lens-protocol/api-examples/blob/master/src/apollo-client.ts#L40).
 
-#### useCollect - Collect a publication using the API - ⚠️ Authenticated API
+### useCollect
+
+Collect a publication using the API
 
 ```typescript
 const { collect, loading, error } = useCollect(publicationId);
@@ -194,9 +204,13 @@ const { collect, loading, error } = useCollect(publicationId);
 collect();
 ```
 
-### Contract
+## Contract
 
-#### useCollectContract - Collect a publication using the Lens Hub Contract
+### useContractCollect
+
+_[Lens Reference](https://docs.lens.xyz/docs/functions#collect)_
+
+Collect a publication using the Lens Hub Contract
 
 ```typescript
 const { write, data, prepareError, writeError, status } = useContractCollect(
