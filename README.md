@@ -43,7 +43,7 @@ pnpm add @memester-xyz/lens-use
 
 ## Basic
 
-1. Your app must first be wrapped in Wagmi and Apollo contexts. e.g.:
+1. Your app must first be wrapped in a Wagmi context and a Apollo context (connected to the Lens API). e.g.:
 
 ```typescript
 function App() {
@@ -156,7 +156,7 @@ Hooks to help with authenticating against the Lens API.
 
 _[Lens Reference](https://docs.lens.xyz/docs/login#challenge)_
 
-Get a challenge to be signed by the user.
+Get a challenge to be signed by the user
 
 ```typescript
 const { data: challengeData } = useChallenge(address);
