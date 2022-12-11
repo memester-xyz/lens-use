@@ -180,7 +180,7 @@ const [authenticate, { data: authenticateData }] = useAuthenticate(address, sign
 authenticate();
 
 // After the request is complete
-// authenticateData.authenticate.accessToken has acccess token
+// authenticateData.authenticate.accessToken has access token
 // authenticateData.authenticate.refreshToken has refresh token
 ```
 
@@ -197,7 +197,7 @@ const [refresh, { data: refreshData }] = useRefresh(refreshToken);
 refresh();
 
 // After the request is complete
-// refreshData.refresh.accessToken has acccess token
+// refreshData.refresh.accessToken has access token
 // refreshData.refresh.refreshToken has refresh token
 ```
 
