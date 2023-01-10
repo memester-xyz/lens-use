@@ -1,6 +1,13 @@
 <h1 align="center">lens-use 🌱</h1>
 
+<h2 align="center">Deprecation Notice</h2>
+
+<p align="center">
+  Lens Protocol is working on their own <a href="https://github.com/lens-protocol/lens-sdk">React SDK</a> which should be used instead of this library.
+</p>
+
 <h2 align="center">React Hooks for Lens Protocol</h2>
+
 
 <p align="center">
   <a href="https://reactjs.org/">React</a> 🤝 <a href="https://www.lens.xyz/">Lens Protocol</a>
